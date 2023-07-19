@@ -1,7 +1,9 @@
-package com.androboy.androidarch
+package com.androboy.androidarch.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.androboy.androidarch.R
+
 /**
  * This is main activity
  * */
