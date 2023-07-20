@@ -9,24 +9,44 @@ import java.io.InputStream
 
 
 class MainViewModel(context: Context) : ViewModel() {
-    var quoteList:Array<Quote> = emptyArray()
+    private var quoteList: Array<Quote> = emptyArray()
+    private var index: Int = 0
 
 
     init {
         quoteList = readFile(context)
     }
 
-
-    fun readFile(context: Context): Array<Quote>{
-        val inputStream : InputStream = context.assets.open("quote.json")
-        val size:Int = inputStream.available()
+    private fun readFile(context: Context): Array<Quote> {
+        val inputStream: InputStream = context.assets.open("quote.json")
+        val size: Int = inputStream.available()
         val buffer = ByteArray(size)
         inputStream.read(buffer)
         inputStream.close()
         val json = String(buffer)
-        val res :QuoteRes = GsonUtils.parseJson(json,QuoteRes::class.java)
+        val res: QuoteRes = GsonUtils.parseJson(json, QuoteRes::class.java)
         return res.quotes
+    }
 
+    fun getQuote():Quote{
+        return quoteList[0]
+    }
+
+    fun nextQuote():Quote {
+        if (index < quoteList.size)
+        index++
+        else index
+
+        return quoteList[index]
+    }
+
+    fun prevQuote() :Quote{
+        index--
+        if (index > 0)
+            index--
+        else index
+
+        return quoteList[index]
     }
 
 }
