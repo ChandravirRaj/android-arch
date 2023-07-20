@@ -1,14 +1,22 @@
 package com.androboy.androidarch.ui.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.androboy.androidarch.ui.model.Quote
 import com.androboy.androidarch.ui.model.QuoteRes
+import com.androboy.androidarch.ui.model.Student
 import com.androboy.androidarch.utils.GsonUtils
 import java.io.InputStream
 
 
 class MainViewModel(context: Context) : ViewModel() {
+    private val studentList = ArrayList<Student>()
+    private var studentMutableLiveData = MutableLiveData<ArrayList<Student>>()
+    val studentLiveData: LiveData<ArrayList<Student>>
+        get() = studentMutableLiveData
+
     private var quoteList: Array<Quote> = emptyArray()
     private var index: Int = 0
 
@@ -28,25 +36,32 @@ class MainViewModel(context: Context) : ViewModel() {
         return res.quotes
     }
 
-    fun getQuote():Quote{
+
+
+    fun getQuote(): Quote {
         return quoteList[0]
     }
 
-    fun nextQuote():Quote {
+    fun nextQuote(): Quote {
         if (index < quoteList.size)
-        index++
+            index++
         else index
 
         return quoteList[index]
     }
 
-    fun prevQuote() :Quote{
+    fun prevQuote(): Quote {
         index--
         if (index > 0)
             index--
         else index
 
         return quoteList[index]
+    }
+
+    fun updateStudentList(student: Student){
+        studentList.add(student);
+        studentMutableLiveData.value = studentList
     }
 
 }
