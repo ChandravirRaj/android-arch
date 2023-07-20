@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidArch</string>
+    <string name="msg_network_connection">Network is not available. Please try again.</string>
 </resources>
