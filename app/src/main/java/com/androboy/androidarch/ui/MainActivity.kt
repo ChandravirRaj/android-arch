@@ -63,9 +63,7 @@ class MainActivity : BaseActivity() {
 
         ui.tvAddStudent.setOnClickListener {
             ++count
-//            val student = Student("Kamal Singh $count",count*10)
-//            viewModel.updateStudentList(student)
-            val user = User("Kamal$count", "Singh", 25, "kamal$count@yopmail.com")
+            val user = User(count,"Kamal$count", "Singh", 25, "kamal$count@yopmail.com")
             viewModel.insertUser(user)
         }
     }
