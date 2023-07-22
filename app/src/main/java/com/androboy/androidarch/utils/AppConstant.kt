@@ -1,4 +1,4 @@
-package com.androboy.androidarch.constant
+package com.androboy.androidarch.utils
 
 class AppConstant {
     companion object{

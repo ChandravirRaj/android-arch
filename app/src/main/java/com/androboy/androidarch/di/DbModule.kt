@@ -2,7 +2,7 @@ package com.androboy.androidarch.di
 
 import android.content.Context
 import androidx.room.Room
-import com.androboy.androidarch.constant.AppConstant
+import com.androboy.androidarch.utils.AppConstant
 import com.androboy.androidarch.db.AppDatabase
 import com.androboy.androidarch.db.entities.User
 import dagger.Module
