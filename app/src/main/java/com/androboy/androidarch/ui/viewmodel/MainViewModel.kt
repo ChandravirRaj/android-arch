@@ -6,43 +6,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androboy.androidarch.db.entities.User
+import com.androboy.androidarch.repository.QuoteRepository
 import com.androboy.androidarch.repository.UserRepository
 import com.androboy.androidarch.ui.model.Quote
 import com.androboy.androidarch.ui.model.QuoteRes
+import com.androboy.androidarch.ui.model.Result
 import com.androboy.androidarch.ui.model.Student
 import com.androboy.androidarch.utils.GsonUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.InputStream
+import javax.inject.Inject
+
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val userRepository: UserRepository,
+    private val quoteRepository: QuoteRepository
+) : ViewModel() {
+    private val quoteMutableLiveData = MutableLiveData<List<Result>>()
+
+    private val quoteLiveData: LiveData<List<Result>>
+        get() = quoteMutableLiveData
 
 
-class MainViewModel(context: Context, private val userRepository: UserRepository) : ViewModel() {
-    private val studentList = ArrayList<Student>()
-    private var studentMutableLiveData = MutableLiveData<ArrayList<Student>>()
-    private var usersMutableLiveData = MutableLiveData<List<User>>()
-    val studentLiveData: LiveData<ArrayList<Student>>
-        get() = studentMutableLiveData
-
-    val usersLiveData: LiveData<List<User>>
-        get() = usersMutableLiveData
-
-    private var quoteList: Array<Quote> = emptyArray()
-    private var index: Int = 0
-
-
-    init {
-        quoteList = readFile(context)
-    }
-
-    fun getUsers(): LiveData<List<User>> {
-        return userRepository.getUsers()
-    }
-
-    fun insertUser(user: User){
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository.insertUser(user)
-        }
-    }
 
     private fun readFile(context: Context): Array<Quote> {
         val inputStream: InputStream = context.assets.open("quote.json")
@@ -56,30 +46,17 @@ class MainViewModel(context: Context, private val userRepository: UserRepository
     }
 
 
-    fun getQuote(): Quote {
-        return quoteList[0]
-    }
 
-    fun nextQuote(): Quote {
-        if (index < quoteList.size)
-            index++
-        else index
 
-        return quoteList[index]
-    }
-
-    fun prevQuote(): Quote {
-        index--
-        if (index > 0)
-            index--
-        else index
-
-        return quoteList[index]
-    }
-
-    fun updateStudentList(student: Student) {
-        studentList.add(student);
-        studentMutableLiveData.value = studentList
+    fun getQuotes(page: Int): LiveData<List<Result>> {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = quoteRepository.getQuotes(page)
+            if (result.body() != null) {
+                val response = result.body()!!.results
+                quoteMutableLiveData.postValue(response)
+            }
+        }
+        return quoteLiveData
     }
 
 }

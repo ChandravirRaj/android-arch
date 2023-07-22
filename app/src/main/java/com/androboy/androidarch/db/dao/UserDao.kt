@@ -8,7 +8,6 @@ import com.androboy.androidarch.db.entities.User
 
 @Dao
 interface UserDao {
-
     @Insert
     fun insertUser(user: User)
 
