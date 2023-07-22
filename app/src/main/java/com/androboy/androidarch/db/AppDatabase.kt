@@ -6,7 +6,7 @@ import com.androboy.androidarch.db.dao.UserDao
 import com.androboy.androidarch.db.entities.User
 
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 }

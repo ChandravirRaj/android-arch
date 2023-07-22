@@ -1,7 +1,7 @@
 package com.androboy.androidarch.di
 
-import com.androboy.androidarch.api.ApiClient
-import com.androboy.androidarch.api.AuthInterceptor
+import com.androboy.androidarch.api.ApiRequests
+import com.androboy.androidarch.api.APIInterceptor
 import com.androboy.androidarch.utils.AppConstant
 import dagger.Module
 import dagger.Provides
@@ -29,7 +29,7 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: APIInterceptor): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -41,8 +41,8 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideApiInterface(retrofit: Retrofit): ApiClient {
-        return retrofit.create(ApiClient::class.java)
+    fun provideApiInterface(retrofit: Retrofit): ApiRequests {
+        return retrofit.create(ApiRequests::class.java)
     }
 
 }

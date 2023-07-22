@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androboy.androidarch.db.entities.User
+import com.androboy.androidarch.model.base.Errors
 import com.androboy.androidarch.repository.QuoteRepository
 import com.androboy.androidarch.repository.UserRepository
 import com.androboy.androidarch.ui.model.Quote
@@ -27,10 +28,13 @@ class MainViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val quoteRepository: QuoteRepository
 ) : ViewModel() {
-    private val quoteMutableLiveData = MutableLiveData<List<Result>>()
 
-    private val quoteLiveData: LiveData<List<Result>>
-        get() = quoteMutableLiveData
+
+    val quoteLiveData: LiveData<List<Result>>
+        get() = quoteRepository.quoteLiveData
+
+    val errorsLiveData: LiveData<Errors>
+        get() = quoteRepository.errorsLiveData
 
 
 
@@ -48,15 +52,22 @@ class MainViewModel @Inject constructor(
 
 
 
-    fun getQuotes(page: Int): LiveData<List<Result>> {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = quoteRepository.getQuotes(page)
-            if (result.body() != null) {
-                val response = result.body()!!.results
-                quoteMutableLiveData.postValue(response)
-            }
-        }
-        return quoteLiveData
+    fun getQuotes(page: Int){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val result = quoteRepository.getQuotes(page)
+////            if (result.body() != null) {
+////                val response = result.body()!!.results
+////                quoteMutableLiveData.postValue(response)
+////            }
+//        }
+//        return quoteLiveData
+//        viewModelScope.launch(Dispatchers.IO) {
+//            quoteRepository.getQuotes(page)
+//        }
+
+        quoteRepository.getQuotes(page)
+
+
     }
 
 }

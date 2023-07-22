@@ -46,8 +46,12 @@ class MainActivity : BaseActivity() {
 
     private fun setObserver() {
 
-        viewModel.getQuotes(1).observe(this, Observer {
-            Log.d("MMMMM", "setObserver: $it")
+        viewModel.quoteLiveData.observe(this, Observer {
+
+        })
+
+        viewModel.errorsLiveData.observe(this, Observer {
+            Log.d("MMMM", "onFailure Activity : ${it.message}")
         })
     }
 }
