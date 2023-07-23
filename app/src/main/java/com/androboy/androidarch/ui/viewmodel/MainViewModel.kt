@@ -30,11 +30,19 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
 
+    private val _quoteLiveData = MutableLiveData<List<Result>> ()
+    private val _errorsLiveData = MutableLiveData<Errors> ()
+
+
     val quoteLiveData: LiveData<List<Result>>
-        get() = quoteRepository.quoteLiveData
+        get() = _quoteLiveData
+
 
     val errorsLiveData: LiveData<Errors>
-        get() = quoteRepository.errorsLiveData
+        get() = _errorsLiveData
+
+//    val errorsLiveData: LiveData<Errors>
+//        get() = quoteRepository.errorsLiveData
 
 
 
@@ -53,19 +61,22 @@ class MainViewModel @Inject constructor(
 
 
     fun getQuotes(page: Int){
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val result = quoteRepository.getQuotes(page)
-////            if (result.body() != null) {
-////                val response = result.body()!!.results
-////                quoteMutableLiveData.postValue(response)
-////            }
-//        }
-//        return quoteLiveData
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = quoteRepository.getQuotes(page)
+            if (result.body() != null) {
+                val response = result.body()!!.results
+                _quoteLiveData.postValue(response)
+            }else{
+                val errors = Errors()
+                errors.message = "Something Went Wrong"
+                _errorsLiveData.postValue(errors)
+            }
+        }
 //        viewModelScope.launch(Dispatchers.IO) {
 //            quoteRepository.getQuotes(page)
 //        }
 
-        quoteRepository.getQuotes(page)
+//        quoteRepository.getQuotes(page)
 
 
     }
