@@ -2,6 +2,7 @@ package com.androboy.androidarch.di
 
 import com.androboy.androidarch.api.ApiRequests
 import com.androboy.androidarch.api.APIInterceptor
+import com.androboy.androidarch.api.exception.ResultCallAdapterFactory
 import com.androboy.androidarch.utils.AppConstant
 import dagger.Module
 import dagger.Provides
@@ -23,6 +24,7 @@ class NetworkModule {
         return Retrofit.Builder()
             .baseUrl(AppConstant.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(ResultCallAdapterFactory())
             .client(okHttpClient)
             .build()
     }

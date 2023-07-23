@@ -8,6 +8,7 @@ import androidx.viewbinding.ViewBinding
 import com.androboy.androidarch.BaseActivity
 import com.androboy.androidarch.databinding.ActivityMainBinding
 import com.androboy.androidarch.ui.viewmodel.MainViewModel
+import com.androboy.androidarch.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -47,11 +48,22 @@ class MainActivity : BaseActivity() {
     private fun setObserver() {
 
         viewModel.quoteLiveData.observe(this, Observer {
+            when (it) {
+                is NetworkResult.Success -> {
+                    Log.d("MMMMMM", "setObserver Success:  ${it.data.toString()}")
+
+                }
+
+                is NetworkResult.Error -> {
+                    Log.d("MMMMMM", "setObserver Error: ")
+                }
+
+                is NetworkResult.Loading -> {
+                    Log.d("MMMMMM", "setObserver Loading: ")
+                }
+            }
 
         })
 
-        viewModel.errorsLiveData.observe(this, Observer {
-            Log.d("MMMM", "onFailure Activity : ${it.message}")
-        })
     }
 }

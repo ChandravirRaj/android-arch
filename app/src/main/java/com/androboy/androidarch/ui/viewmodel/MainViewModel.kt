@@ -11,9 +11,11 @@ import com.androboy.androidarch.repository.QuoteRepository
 import com.androboy.androidarch.repository.UserRepository
 import com.androboy.androidarch.ui.model.Quote
 import com.androboy.androidarch.ui.model.QuoteRes
+import com.androboy.androidarch.ui.model.QuoteResponse
 import com.androboy.androidarch.ui.model.Result
 import com.androboy.androidarch.ui.model.Student
 import com.androboy.androidarch.utils.GsonUtils
+import com.androboy.androidarch.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -30,16 +32,10 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val _quoteLiveData = MutableLiveData<List<Result>> ()
-    private val _errorsLiveData = MutableLiveData<Errors> ()
+    val quoteLiveData: LiveData<NetworkResult<QuoteResponse>>
+        get() = quoteRepository.quoteLiveData
 
 
-    val quoteLiveData: LiveData<List<Result>>
-        get() = _quoteLiveData
-
-
-    val errorsLiveData: LiveData<Errors>
-        get() = _errorsLiveData
 
 //    val errorsLiveData: LiveData<Errors>
 //        get() = quoteRepository.errorsLiveData
@@ -62,15 +58,7 @@ class MainViewModel @Inject constructor(
 
     fun getQuotes(page: Int){
         viewModelScope.launch(Dispatchers.IO) {
-            val result = quoteRepository.getQuotes(page)
-            if (result.body() != null) {
-                val response = result.body()!!.results
-                _quoteLiveData.postValue(response)
-            }else{
-                val errors = Errors()
-                errors.message = "Something Went Wrong"
-                _errorsLiveData.postValue(errors)
-            }
+            quoteRepository.getQuotes(page)
         }
 //        viewModelScope.launch(Dispatchers.IO) {
 //            quoteRepository.getQuotes(page)
