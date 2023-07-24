@@ -32,8 +32,9 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
 
+    private val _quoteLiveData = MutableLiveData<NetworkResult<QuoteResponse>>()
     val quoteLiveData: LiveData<NetworkResult<QuoteResponse>>
-        get() = quoteRepository.quoteLiveData
+        get() = _quoteLiveData
 
 
 
@@ -58,7 +59,7 @@ class MainViewModel @Inject constructor(
 
     fun getQuotes(page: Int){
         viewModelScope.launch(Dispatchers.IO) {
-            quoteRepository.getQuotes(page)
+            _quoteLiveData.postValue(quoteRepository.getQuotes(page))
         }
 //        viewModelScope.launch(Dispatchers.IO) {
 //            quoteRepository.getQuotes(page)
