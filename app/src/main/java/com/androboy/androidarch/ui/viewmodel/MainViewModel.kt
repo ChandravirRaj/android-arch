@@ -1,6 +1,7 @@
 package com.androboy.androidarch.ui.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -59,7 +60,23 @@ class MainViewModel @Inject constructor(
 
     fun getQuotes(page: Int){
         viewModelScope.launch(Dispatchers.IO) {
-            _quoteLiveData.postValue(quoteRepository.getQuotes(page))
+            quoteRepository.getQuotes(page).let {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        Log.d("MMMMMM", "setObserver Success:  ${it.data.toString()}")
+                        _quoteLiveData.postValue(it)
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        Log.d("MMMMMM", "setObserver Error: ")
+                    }
+
+                    is NetworkResult.Loading -> {
+                        Log.d("MMMMMM", "setObserver Loading: ")
+                    }
+                }
+            }
         }
 //        viewModelScope.launch(Dispatchers.IO) {
 //            quoteRepository.getQuotes(page)
